@@ -1,3 +1,5 @@
+#student: Gustavo Sampaio
+#id: 122623992
 class Woman:
 	def __init__(self, informations, n_preferences):
 		self.name = informations[0]
@@ -23,12 +25,9 @@ def to_engage(woman, man):
 	man.partner = woman.name
 
 def w_prefers_m1_Over_m(w, m, groom, n_mariages):
-
 	for i in range(n_mariages):
-          
 		if w.w_pref[i] == groom.name:
 			return True
-  
 		if w.w_pref[i] == m.name:
 		    return False
 
