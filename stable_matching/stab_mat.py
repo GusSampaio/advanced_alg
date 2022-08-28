@@ -1,82 +1,67 @@
-# Number of Men or Women
-N = 4
+class Woman:
+	def __init__(self, informations, n_preferences):
+		self.name = informations[0]
+		self.engaged = False
+		self.partner = 0
+		self.w_pref = []
+		for i in range(n_preferences):
+			self.woman_preference.append(informations[i+1])
 
-# This function returns true if
-# woman 'w' prefers man 'm1' over man 'm'
-def wPrefersM1OverM(prefer, w, m, m1):
-	
-	# Check if w prefers m over her
-	# current engagement m1
-	for i in range(N):
-		
-		# If m1 comes before m in list of w,
-		# then w prefers her current engagement,
-		# don't do anything
-		if (prefer[w][i] == m1):
-			return True
+class Man:
+	def __init__(self, informations, n_preferences):
+		self.name = informations[0]
+		self.m_pref = []
+		self.engaged = False
+		self.partner = 0
+		for i in range(n_preferences):
+			self.man_preference.append(informations[i+1])
 
-		# If m comes before m1 in w's list,
-		# then free her current engagement
-		# and engage her with m
-		if (prefer[w][i] == m):
-			return False
+def to_engage(woman, man):
+	woman.engaged = True
+	man.engaged = True
+	woman.partner = man
+	man.partner = woman
 
-# Prints stable matching for N boys and N girls.
-# Boys are numbered as 0 to N-1.
-# Girls are numbered as N to 2N-1.
-def stableMarriage(prefer):
-	
-	# Stores partner of women. This is our output
-	# array that stores passing information.
-	# The value of wPartner[i] indicates the partner
-	# assigned to woman N+i. Note that the woman numbers
-	# between N and 2*N-1. The value -1 indicates
-	# that (N+i)'th woman is free
-	wPartner = [-1 for i in range(N)]
+def stableMarriage(men_list, women_list, n_mariages):
 
-	# An array to store availability of men.
-	# If mFree[i] is false, then man 'i' is free,
-	# otherwise engaged.
-	mFree = [False for i in range(N)]
-
-	freeCount = N
+	freeCount = n_mariages
 
 	# While there are free men
 	while (freeCount > 0):
 		
-		# Pick the first free man (we could pick any)
+		# Pick the first free man
 		m = 0
-		while (m < N):
-			if (mFree[m] == False):
+		while (m < n_mariages):
+			if (men_list[m].engaged == False):
 				break
 			m += 1
 
-		# One by one go to all women according to
-		# m's preferences. Here m is the picked free man
+		# One by one go to all women according to m's preferences. 
 		i = 0
-		while i < N and mFree[m] == False:
-			w = prefer[m][i]
+		while i < n_mariages and men_list[m].engaged == False:
+			w = men_list[m].m_pref[i]
 
-			# The woman of preference is free,
-			# w and m become partners (Note that
-			# the partnership maybe changed later).
+			for i in range(n_mariages):
+				if w == women_list[i].name:
+					w = women_list[i]
+					break
+
+			# The woman of preference is free, w and m become partners.
 			# So we can say they are engaged not married
-			if (wPartner[w - N] == -1):
-				wPartner[w - N] = m
-				mFree[m] = True
-				freeCount -= 1
-
-			else:
+			if (w.engaged ==  False):
+				to_engage(w, men_list[m])
 				
-				# If w is not free
-				# Find current engagement of w
-				m1 = wPartner[w - N]
+
+			# If w is not free
+			# Find current engagement of w
+			else:
+				m1 = wPartner[w - n_mariages]
 
 				# If w prefers m over her current engagement m1,
 				# then break the engagement between w and m1 and
 				# engage m with w.
-				if (wPrefersM1OverM(prefer, w, m, m1) == False):
-					wPartner[w - N] = m
+				if (wPrefersM1OverM(prefer, w, m, m1, n_mariages) == False):
+					wPartner[w - n_mariages] = m
 					mFree[m] = True
 					mFree[m1] = False
 			i += 1
@@ -87,16 +72,37 @@ def stableMarriage(prefer):
 	# End of main while loop
 
 	# Print solution
-	print("Woman ", " Man")
-	for i in range(N):
-		print(i + N, "\t", wPartner[i])
+	for i in range(n_mariages):
+		print(i+1, "\t", wPartner[i])
 
-# Driver Code
-prefer = [[7, 5, 6, 4], [5, 4, 6, 7],
-		[4, 5, 6, 7], [4, 5, 6, 7],
-		[0, 1, 2, 3], [0, 1, 2, 3],
-		[0, 1, 2, 3], [0, 1, 2, 3]]
+if __name__ == '__main__':
 
-stableMarriage(prefer)
+	test_cases = int(input())
+	
+	#remake test cases
+	for i in range(test_cases):
+		# Number of Men or Women
+		n_mariages = int(input())
+	
+		#readed string 
+		prefer = []
 
-# This code is contributed by Mohit Kumar
+		women_list = []
+		men_list = []
+		
+		#received string changed into 'int' numbers
+		prefers = []
+
+		for i in range(n_mariages):
+			prefer = input()
+			new_prefer = prefer.split()
+			new_prefer = [int(i) for i in new_prefer]
+			women_list.append(Woman(new_prefer, n_mariages))
+
+		for i in range(n_mariages):
+			prefer = input()
+			new_prefer = prefer.split()
+			new_prefer = [int(i) for i in new_prefer]
+			men_list.append(Man(new_prefer, n_mariages))
+
+		stableMarriage(men_list, women_list, n_mariages)
