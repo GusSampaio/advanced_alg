@@ -92,6 +92,9 @@ def stableMarriage(men_list, women_list, n_mariages):
 		# to all women in m's list
 	# End of main while loop
 
+	#sorting for print in ascending order
+	men_list = sorted(men_list, key= lambda x: x.name)
+	
 	# Print solution
 	for i in range(n_mariages):
 		print(men_list[i].name, ' ', men_list[i].partner)
