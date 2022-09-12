@@ -97,7 +97,7 @@ def stableMarriage(men_list, women_list, n_mariages):
 	
 	# Print solution
 	for i in range(n_mariages):
-		print(men_list[i].name, ' ', men_list[i].partner)
+		print(men_list[i].name,men_list[i].partner)
 
 if __name__ == '__main__':
 
