@@ -1,17 +1,21 @@
 from functools import lru_cache
-@lru_cache(maxsize=1024*1024) #by default
+@lru_cache(maxsize=None) #by default
+
 #Search for the minimum possible total energy cost incurred.
-def search_best_path(mountain_pos): #Aplicando a programacao dinamica progressiva
-    res1, res2 = 1000, 10000
-    if mountain_pos+1 <= len(mountains): res1 = abs(mountains[mountain_pos] - mountains[mountain_pos + 1])
-    if mountain_pos+2 <= len(mountains): res2 = abs(mountains[mountain_pos] - mountains[mountain_pos + 2])
-    return min(res1, res2)
+def search_best_path(mountain_pos):
+    if mountain_pos < len(mountains)-2: 
+        possible_path1 = abs(mountains[mountain_pos + 1] - mountains[mountain_pos]) + search_best_path(mountain_pos + 1)
+        possible_path2 = abs(mountains[mountain_pos + 2] - mountains[mountain_pos]) + search_best_path(mountain_pos + 2)
+        return min(possible_path1, possible_path2)
+    elif mountain_pos == len(mountains) - 2:
+        return abs(mountains[mountain_pos+1] - mountains[mountain_pos])
+    else:
+        return 0
 
 amount_mountains = int(input())
 mountains = [int(i) for i in input().split()]
-for i in range(amount_mountains):
-    search_best_path(mountains[i])
+
+for i in range(amount_mountains, 0, -1): #Calculating all best paths, in reverse
+    search_best_path(i)
 
 print(search_best_path(0))
-#Qual é o nosso caso base?
-# Neste caso, vale pensar que o caso base seria a distância entre uma montanha e ela mesma (d = 0)
