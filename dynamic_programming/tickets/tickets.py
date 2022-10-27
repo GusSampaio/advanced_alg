@@ -1,6 +1,4 @@
-from functools import lru_cache
 INT_MAX = 500
-@lru_cache(maxsize=None)
 def search_best_price(ac_day, day_x, day_y, day_z):
     cost1, cost2, cost3 = INT_MAX, INT_MAX, INT_MAX
     while (ac_day not in days and ac_day <= days[amount_days-1]):  
